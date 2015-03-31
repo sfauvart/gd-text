@@ -192,16 +192,18 @@ class Box
         // Split text explicitly into lines by \n, \r\n and \r
         $explicitLines = preg_split('/\n|\r\n?/', $text);
         foreach ($explicitLines as $line) {
-            // Check every line if it needs to be wrapped
-            $words = explode(" ", $line);
-            $line = $words[0];
-            for ($i = 1; $i < count($words); $i++) {
-                $box = $this->calculateBox($line." ".$words[$i]);
-                if (($box[4]-$box[6]) >= $this->box['width']) {
-                    $lines[] = $line;
-                    $line = $words[$i];
-                } else {
-                    $line .= " ".$words[$i];
+            if($this->fitWidth == false) {
+                // Check every line if it needs to be wrapped
+                $words = explode(" ", $line);
+                $line = $words[0];
+                for ($i = 1; $i < count($words); $i++) {
+                    $box = $this->calculateBox($line." ".$words[$i]);
+                    if (($box[4]-$box[6]) >= $this->box['width']) {
+                        $lines[] = $line;
+                        $line = $words[$i];
+                    } else {
+                        $line .= " ".$words[$i];
+                    }
                 }
             }
             $lines[] = $line;
