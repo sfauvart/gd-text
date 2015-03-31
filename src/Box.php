@@ -54,6 +54,11 @@ class Box
     protected $fitWidth = false;
 
     /**
+     * @var bool
+     */
+    protected $fitHeight = false;
+
+    /**
      * @var bool|array
      */
     protected $textShadow = false;
@@ -168,6 +173,10 @@ class Box
     
     public function enableFitWidth() {
         $this->fitWidth = true;
+    }
+    
+    public function enableFitHeight() {
+        $this->fitHeight = true;
     }
 
     /**
@@ -307,6 +316,12 @@ class Box
         
         if($this->fitWidth == true) {
             while($data[4] > ($this->box['x'] + $this->box['width']) && $this->fontSize > 1) {
+                $this->fontSize = $this->fontSize - 1;
+                $data = imageftbbox($this->getFontSizeInPoints(), 0, $this->fontFace, $text);
+            }
+        }
+        if($this->fitHeight == true) {
+            while($data[3] > ($this->box['y'] + $this->box['height']) && $this->fontSize > 1) {
                 $this->fontSize = $this->fontSize - 1;
                 $data = imageftbbox($this->getFontSizeInPoints(), 0, $this->fontFace, $text);
             }
