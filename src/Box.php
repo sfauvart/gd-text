@@ -49,6 +49,11 @@ class Box
     protected $debug = false;
 
     /**
+     * @var bool
+     */
+    protected $fitWidth = false;
+
+    /**
      * @var bool|array
      */
     protected $textShadow = false;
@@ -159,6 +164,10 @@ class Box
         $this->box['y'] = $y;
         $this->box['width'] = $width;
         $this->box['height'] = $height;
+    }
+    
+    public function enableFitWidth() {
+        $this->fitWidth = true;
     }
 
     /**
@@ -290,7 +299,18 @@ class Box
 
     protected function calculateBox($text)
     {
-        return imageftbbox($this->getFontSizeInPoints(), 0, $this->fontFace, $text);
+        $data = array();
+        
+        $data = imageftbbox($this->getFontSizeInPoints(), 0, $this->fontFace, $text);
+        
+        if($this->fitWidth == true) {
+            while($data[4] > ($this->box['x'] + $this->box['width']) && $this->fontSize > 1) {
+                $this->fontSize = $this->fontSize - 1;
+                $data = imageftbbox($this->getFontSizeInPoints(), 0, $this->fontFace, $text);
+            }
+        }
+
+        return $data;
     }
 
     protected function drawInternal($x, $y, Color $color, $text)
